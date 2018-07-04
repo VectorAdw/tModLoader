@@ -74,9 +74,8 @@ namespace Terraria.ModLoader
 		internal static bool buildAll = false;
 
 		// TODO cb suggested loadOrder may not be needed as mods are already in load order
-		private static readonly Stack<string> loadOrder = new Stack<string>();
 		internal static Mod[] loadedMods = new Mod[0];
-		internal static readonly IDictionary<string, Mod> mods = new Dictionary<string, Mod>(StringComparer.OrdinalIgnoreCase);
+		internal static IDictionary<string, Mod> mods = new Dictionary<string, Mod>(StringComparer.OrdinalIgnoreCase);
 		public static int ModCount => loadedMods.Length;
 		
 		internal static readonly string modBrowserPublicKey = "<RSAKeyValue><Modulus>oCZObovrqLjlgTXY/BKy72dRZhoaA6nWRSGuA+aAIzlvtcxkBK5uKev3DZzIj0X51dE/qgRS3OHkcrukqvrdKdsuluu0JmQXCv+m7sDYjPQ0E6rN4nYQhgfRn2kfSvKYWGefp+kqmMF9xoAq666YNGVoERPm3j99vA+6EIwKaeqLB24MrNMO/TIf9ysb0SSxoV8pC/5P/N6ViIOk3adSnrgGbXnFkNQwD0qsgOWDks8jbYyrxUFMc4rFmZ8lZKhikVR+AisQtPGUs3ruVh4EWbiZGM2NOkhOCOM4k1hsdBOyX2gUliD0yjK5tiU3LBqkxoi2t342hWAkNNb4ZxLotw==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
@@ -122,10 +121,11 @@ namespace Terraria.ModLoader
 
 		internal static void UnloadMods()
 		{
-			while (loadOrder.Count > 0)
-				GetMod(loadOrder.Pop()).UnloadContent();
-
-			loadOrder.Clear();
+			foreach (var mod in mods.Values)
+			{
+				mod.UnloadContent();
+			}
+			mods.Clear();
 			loadedMods = new Mod[0];
 		}
 		
@@ -150,11 +150,7 @@ namespace Terraria.ModLoader
 			// Instances found, update loadedMods/loadOrder/mods arrays and load the content
 			loadedMods = instances.ToArray();
 			ModOrganiser.loadedModsWeakReferences = loadedMods.Skip(1).Select(x => new WeakReference(x)).ToArray();
-			foreach (var mod in instances)
-			{
-				loadOrder.Push(mod.Name);
-				mods[mod.Name] = mod;
-			}
+			mods = instances.ToDictionary(x => x.Name, y => y);
 			ModContent.LoadContent(new Dictionary<string, Mod>(mods));
 		}
 
