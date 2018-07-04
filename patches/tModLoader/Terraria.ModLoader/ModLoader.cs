@@ -73,7 +73,6 @@ namespace Terraria.ModLoader
 		internal static bool reloadAfterBuild = false;
 		internal static bool buildAll = false;
 
-		// TODO cb suggested loadOrder may not be needed as mods are already in load order
 		internal static Mod[] loadedMods = new Mod[0];
 		internal static IDictionary<string, Mod> mods = new Dictionary<string, Mod>(StringComparer.OrdinalIgnoreCase);
 		public static int ModCount => loadedMods.Length;
@@ -270,5 +269,36 @@ namespace Terraria.ModLoader
 
 			return method;
 		}
+		
+		/*
+		 * Forwarder, deprecated, methods
+		 * These are methods used likely by many modders, which may need some time to adjust to changes
+		 */
+		[Obsolete("ModLoader.GetFileBytes is deprecated since v0.10.1.4, use ModContent.GetFileBytes instead.")]
+		public static byte[] GetFileBytes(string name) => ModContent.GetFileBytes(name);
+		
+		[Obsolete("ModLoader.FileExists is deprecated since v0.10.1.4, use ModContent.FileExists instead.")]
+		public static bool FileExists(string name) => ModContent.FileExists(name);
+		
+		[Obsolete("ModLoader.GetTexture is deprecated since v0.10.1.4, use ModContent.GetTexture instead.")]
+		public static Texture2D GetTexture(string name) => ModContent.GetTexture(name);
+
+		[Obsolete("ModLoader.TextureExists is deprecated since v0.10.1.4, use ModContent.TextureExists instead.")]
+		public static bool TextureExists(string name) => ModContent.TextureExists(name);
+		
+		[Obsolete("ModLoader.GetSound is deprecated since v0.10.1.4, use ModContent.GetSound instead.")]
+		public static SoundEffect GetSound(string name) => ModContent.GetSound(name);
+		
+		[Obsolete("ModLoader.SoundExists is deprecated since v0.10.1.4, use ModContent.SoundExists instead.")]
+		public static bool SoundExists(string name) => ModContent.SoundExists(name);
+
+		[Obsolete("ModLoader.GetMusic is deprecated since v0.10.1.4, use ModContent.GetMusic instead.")]
+		public static Music GetMusic(string name) => ModContent.GetMusic(name);
+		
+		[Obsolete("ModLoader.MusicExists is deprecated since v0.10.1.4, use ModContent.MusicExists instead.")]
+		public static bool MusicExists(string name) => ModContent.MusicExists(name);
+		
+		[Obsolete("ModLoader.RegisterHotKey is deprecated since v0.10.1.4, use ModContent.RegisterHotKey instead.")]
+		public static ModHotKey RegisterHotKey(Mod mod, string name, string defaultKey) => ModContent.RegisterHotKey(mod, name, defaultKey);
 	}
 }
